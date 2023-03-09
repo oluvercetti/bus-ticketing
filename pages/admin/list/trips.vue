@@ -1,11 +1,26 @@
 <template>
     <div class="mt-3">
         <b-button variant="primary" @click="showAddRouteModal = !showAddRouteModal">Add Route</b-button>
-        <b-table :items="routeList" :fields="fields" :busy="isLoading" ref="location" class="mt-4" striped hover>
+        <b-table :items="routeList" :fields="fields" :busy="isLoading" ref="location" class="mt-4" striped hover outlined>
+            <template #cell(distance)="distance">
+                <!-- `distance.value` is the value after formatted by the Formatter -->
+               <p>{{ distance.value | format_number }}</p>
+            </template>
+            <template #cell(time)="time">
+                <!-- `distance.value` is the value after formatted by the Formatter -->
+               <p>{{ time.value | format_number }}</p>
+            </template>
+            <template #cell(price)="price">
+                <!-- `distance.value` is the value after formatted by the Formatter -->
+               <p>N {{ price.value | format_amount }}</p>
+            </template>
+            <template #cell(active)="active">
+                <!-- `distance.value` is the value after formatted by the Formatter -->
+               <p>{{ active.value ? "Active" : "Inactive"}}</p>
+            </template>
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
                     <b-button @click="handleSelectedRoute(row.item)" variant="primary">Edit</b-button>
-                    <b-button @click="deleteLocation(row.item)" variant="danger">Delete</b-button>
                 </div>
             </template>
             <template #table-busy>
@@ -18,27 +33,67 @@
 
         <b-modal v-model="showAddRouteModal" hide-footer title="Add Route">
             <b-form @submit.prevent="handleCreateRoute()">
-                <b-form-group label="Name" label-for="name">
-                    <b-form-input id="name" v-model="newLocation.location" required></b-form-input>
+                <b-form-group label="Pickup" label-for="pickup">
+                    <b-form-select v-model="newRoute.pickup" :options="computedPickupLocations" id="pickup" required>
+                        <template #first>
+                            <b-form-select-option value="" disabled>-- Please select a pickup location
+                                --</b-form-select-option>
+                        </template>
+                    </b-form-select>
                 </b-form-group>
-                <b-form-group label="Shortcode" label-for="shortcode">
-                    <b-form-input id="shortcode" v-model="newLocation.shortcode" minlength="3" required></b-form-input>
+                <b-form-group label="Destination" label-for="destination">
+                    <b-form-select v-model="newRoute.destination" :options="computedDestinationLocations" id="destination"
+                        :disabled="!newRoute.pickup" required>
+                        <template #first>
+                            <b-form-select-option value="" disabled>-- Please select your destination
+                                --</b-form-select-option>
+                        </template>
+                    </b-form-select>
                 </b-form-group>
-                <b-button type="submit" variant="primary">Add Location</b-button>
-                <b-button type="button">Cancel</b-button>
+                <b-form-group label="Distance" label-for="distance">
+                    <b-form-input id="distance" type="number" min="0" v-model="newRoute.distance" required
+                        placeholder="Kindly input distance in miles"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Time" label-for="time">
+                    <b-form-input id="time" type="number" v-model="newRoute.time" required
+                        placeholder="Please enter time in minutes"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Price" label-for="price">
+                    <b-form-input id="price" type="number" min="0" v-model="newRoute.price" required></b-form-input>
+                </b-form-group>
+                <b-button type="submit" variant="primary" class="mr-3">Add Route</b-button>
+                <b-button type="button" @click="showAddRouteModal = !showAddRouteModal">Cancel</b-button>
             </b-form>
         </b-modal>
 
         <b-modal v-model="showUpdateRouteModal" hide-footer title="Edit Route">
-            <b-form @submit.prevent="updateLocation(selectedLocation)">
-                <b-form-group label="Name" label-for="edit-name">
-                    <b-form-input id="edit-name" v-model="selectedLocation.location" required></b-form-input>
+            <b-form @submit.prevent="updateLocation(selectedRoute)">
+                <b-form-group label="Pickup" label-for="pickup">
+                    <b-form-select v-model="selectedRoute.pickup" :options="computedPickupLocations" id="pickup" disabled />
                 </b-form-group>
-                <b-form-group label="Shortcode" label-for="edit-shortcode">
-                    <b-form-input id="edit-shortcode" v-model="selectedLocation.shortcode" minlength="3"
-                        required></b-form-input>
+                <b-form-group label="Destination" label-for="destination">
+                    <b-form-select v-model="selectedRoute.destination" :options="computedDestinationLocations"
+                        id="destination" disabled />
                 </b-form-group>
-                <b-button type="submit" variant="primary">Save Location</b-button>
+                <b-form-group label="Distance" label-for="distance">
+                    <b-form-input id="distance" type="number" min="0" v-model="selectedRoute.distance" required
+                        placeholder="Kindly input distance in miles"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Time" label-for="time">
+                    <b-form-input id="time" type="number" v-model="selectedRoute.time" required
+                        placeholder="Please enter time in minutes"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Price" label-for="price">
+                    <b-form-input id="price" type="number" min="0" v-model="selectedRoute.price" required></b-form-input>
+                </b-form-group>
+                <b-form-group label="Status" label-for="status">
+                    <b-form-select v-model="selectedRoute.active" id="status">
+                        <b-form-select-option value="true">Active</b-form-select-option>
+                        <b-form-select-option value="false">Inactive</b-form-select-option>
+                    </b-form-select>
+                </b-form-group>
+                <b-button type="submit" variant="primary" class="mr-3">Save Route</b-button>
+                <b-button type="button" @click="showUpdateRouteModal = !showUpdateRouteModal">Cancel</b-button>
             </b-form>
         </b-modal>
     </div>
@@ -50,12 +105,13 @@ export default {
     data() {
         return {
             routeList: [],
+            locationList: [],
             fields: [
                 { key: 'pickup', label: 'Pickup', sortable: true },
                 { key: 'destination', label: 'Destination', sortable: true },
                 { key: 'distance', label: 'Distance', sortable: true },
-                { key: 'time', label: 'Trip Duration (mins)', sortable: true },
-                { key: 'price', label: 'Price (Naira)', sortable: true },
+                { key: 'time', label: 'Trip Duration (mins)', sortable: true, },
+                { key: 'price', label: 'Price (Naira)', sortable: true, },
                 { key: 'active', label: 'Status', sortable: true },
                 'Actions',
             ],
@@ -66,7 +122,14 @@ export default {
                 time: null,
                 price: null,
             },
-            selectedLocation: {},
+            selectedRoute: {
+                pickup: null,
+                destination: null,
+                distance: null,
+                time: null,
+                price: null,
+                active: null
+            },
             showAddRouteModal: false,
             showUpdateRouteModal: false,
             isLoading: false,
@@ -75,9 +138,28 @@ export default {
 
     fetch() {
         this.handleFetchRouteList();
+        return this.handleGetLocationList();
     },
 
     fetchOnServer: false,
+
+    computed: {
+        computedPickupLocations() {
+            return this.locationList.map((data) => {
+                return {
+                    value: data.location, text: data.location
+                }
+            })
+        },
+
+        computedDestinationLocations() {
+            return this.locationList.map((data) => {
+                return {
+                    value: data.location, text: data.location, disabled: this.newRoute.pickup === data.location
+                }
+            })
+        },
+    },
 
     methods: {
         handleFetchRouteList() {
@@ -87,7 +169,7 @@ export default {
                 this.routeList = response.data;
             }).catch((error) => {
                 this.isLoading = false;
-                this.$bvToast.toast(error?.response?.data, {
+                this.$bvToast.toast(error?.response?.data?.message, {
                     title: 'Error',
                     variant: 'danger',
                     delay: 300
@@ -97,8 +179,11 @@ export default {
 
         handleCreateRoute() {
             const payload = {
-                location: this.newLocation.location,
-                shortcode: this.newLocation.shortcode?.toUpperCase()
+                pickup: this.newRoute.pickup,
+                destination: this.newRoute.destination,
+                distance: this.newRoute.distance,
+                time: this.newRoute.time,
+                price: this.newRoute.price,
             }
             return this.$store.dispatch("createRoute", payload).then(() => {
                 this.$bvToast.toast("Route added successfully", {
@@ -109,7 +194,7 @@ export default {
                 this.showAddRouteModal = false
                 this.handleFetchRouteList();
             }).catch((error) => {
-                this.$bvToast.toast(error?.response?.data, {
+                this.$bvToast.toast(error?.response?.data?.message, {
                     title: 'Error',
                     variant: 'danger',
                     delay: 300
@@ -118,20 +203,26 @@ export default {
         },
 
         handleSelectedRoute(data) {
-            this.selectedLocation.location = data.location;
-            this.selectedLocation.shortcode = data.shortcode;
-            this.selectedLocation.id = data.id;
+            this.selectedRoute.pickup = data.pickup;
+            this.selectedRoute.destination = data.destination;
+            this.selectedRoute.distance = data.distance;
+            this.selectedRoute.time = data.time;
+            this.selectedRoute.price = data.price;
+            this.selectedRoute.active = data.active;
+            this.selectedRoute.id = data._id;
             this.showUpdateRouteModal = true;
         },
 
         updateLocation(data) {
             const id = data.id;
             const payload = {
-                location: data.location,
-                shortcode: data.shortcode?.toUpperCase()
+                distance: this.selectedRoute.distance,
+                time: this.selectedRoute.time,
+                price: this.selectedRoute.price,
+                active: this.selectedRoute.active,
             }
-            return this.$store.dispatch("updateLocation", { id, payload }).then((response) => {
-                this.$bvToast.toast("Location updated successfully", {
+            return this.$store.dispatch("updateRoute", { id, payload }).then((response) => {
+                this.$bvToast.toast("Route updated successfully", {
                     title: 'Success',
                     variant: 'success',
                     delay: 300
@@ -178,10 +269,21 @@ export default {
             })
         },
 
+        handleGetLocationList() {
+            this.$store.dispatch("getLocationList").then((response) => {
+                this.locationList = response.data;
+            }).catch((error) => {
+                this.$bvToast.toast(error?.response?.data, {
+                    title: 'Error',
+                    variant: 'danger',
+                    delay: 300
+                })
+            });
+        },
+
         resetLocationValues() {
-            this.newLocation.location = ""
-            this.newLocation.shortcode = ""
-        }
+
+        },
     }
 }
 </script>
