@@ -103,7 +103,7 @@ export const actions = ({
     },
 
     updateRoute(_, { id, payload }) {
-        return this.$axios.patch(`/api/admin/trips${id}`, payload).then((response) => {
+        return this.$axios.patch(`/api/admin/trips/${id}`, payload).then((response) => {
             return response.data;
         })
     },

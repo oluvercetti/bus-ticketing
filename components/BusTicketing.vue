@@ -31,16 +31,42 @@
                     <b-button v-else type="button" variant="primary" size="lg" :disabled="searchDisabled">Search</b-button>
                 </b-form>
             </b-col>
-            <b-col md="6" sm="12" v-if="routeExists">
+            <b-col md="6" sm="12" v-if="routeDetails">
                 <b-card header="Trip Details" header-tag="header" :title="`${pickup} to ${destination}`">
                     <b-card-text>
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                        Distance: {{ routeDetails.distance }} miles
+                    </b-card-text>
+                    <b-card-text>
+                        Price per seat: {{ routeDetails.price | format_amount }} miles
                     </b-card-text>
 
                     <b-button variant="primary">Book Trip</b-button>
                 </b-card>
             </b-col>
         </b-row>
+        <b-modal v-model="showBookTicketModal" hide-footer title="Add Route">
+            <b-form @submit.prevent="handleCreateRoute()">
+                <b-form-group label="Pickup" label-for="pickup">
+                    <b-form-select v-model="pickup" :options="computedPickupLocations" id="pickup" required disabled />
+                </b-form-group>
+                <b-form-group label="Destination" label-for="destination">
+                    <b-form-select v-model="newRoute.destination" :options="computedDestinationLocations" id="destination" required disabled/>
+                </b-form-group>
+                <b-form-group label="Distance" label-for="distance">
+                    <b-form-input id="distance" type="number" min="0" v-model="ticketInfo.distance" required
+                        placeholder="Kindly input distance in miles"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Time" label-for="time">
+                    <b-form-input id="time" type="number" v-model="ticketInfo.time" required
+                        placeholder="Please enter time in minutes"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Price" label-for="price">
+                    <b-form-input id="price" type="number" min="0" v-model="ticketInfo.price" required></b-form-input>
+                </b-form-group>
+                <b-button type="submit" variant="primary" class="mr-3">Add Route</b-button>
+                <b-button type="button" @click="showBookTicketModal = !showBookTicketModal">Cancel</b-button>
+            </b-form>
+        </b-modal>
     </div>
 </template>
 
@@ -60,6 +86,14 @@ export default {
             destination: "",
             ticketCount: 1,
             routeDetails: {},
+            ticketInfo: {
+                custemail: null,
+                seats: null,
+                amount: null,
+                total_amount: null,
+                review: null,
+            },
+            showBookTicketModal: false,
             isLoading: false,
         }
     },
@@ -74,23 +108,19 @@ export default {
         },
 
         computedPickupLocations() {
-            return this.locations.map((location) => {
+            return this.locations.map((data) => {
                 return {
-                    value: location.shortcode, text: location.location
+                    value: data.location, text: data.location
                 }
             })
         },
 
         computedDestinationLocations() {
-            return this.locations.map((location) => {
+            return this.locations.map((data) => {
                 return {
-                    value: location.shortcode, text: location.location, disabled: this.pickup === location.shortcode
+                    value: data.location, text: data.location, disabled: this.pickup === data.location
                 }
             })
-        },
-
-        routeExists() {
-
         },
 
     },
@@ -107,6 +137,23 @@ export default {
             const payload = {
                 route
             }
+        },
+    
+        handleFetchSingleRoute () {
+            const payload = {
+                pickup: this.pickup,
+                destination: this.destination
+            }
+
+            return this.$store.dispatch("fetchSingleRoute", payload).then((response) => {
+                this.routeDetails = response.data;
+            }).catch((error) => {
+                this.$bvToast.toast(error?.response?.data?.message, {
+                    title: 'Error',
+                    variant: 'danger',
+                    delay: 300
+                })
+            });
         }
     },
 }
