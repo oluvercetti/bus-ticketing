@@ -1,13 +1,13 @@
 <template>
         <b-container fluid>
             <b-row align-v="center">
-                <b-col cols="5">
+                <b-col md="5" sm="12" xs="12">
                     <h2>The modern way to commute across cities</h2>
                     <br>
                     <p>NMBTS is a Nigerian technology powered company, providing seamless mobility services to commuters across Africa</p>
                 </b-col>
-                <b-col cols="7">
-                    <div class="search-container">
+                <b-col md="7" sm="12" xs="12" >
+                    <div class="search-container mt-4">
                         <BusTicketing :locations="locationList" />
                     </div>
                 </b-col>

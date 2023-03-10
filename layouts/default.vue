@@ -24,7 +24,11 @@ export default {
   background-image: linear-gradient(to right bottom, rgba(2, 0, 36, 0.8), rgba(0, 212, 255, 0.8)), url("/img/hero.jpg");
   background-size: cover;
   background-position: top;
-  padding: 0 40px;
+  
+    /* Apply padding on screens that are larger than 840px */
+  @media screen and (min-width: 840px) {
+    padding: 0 40px;
+  }
 }
 
 .main-container {

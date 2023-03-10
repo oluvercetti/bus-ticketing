@@ -1,10 +1,13 @@
 <template>
-        <b-container fluid>
-            <b-row align-h="center">
+    <b-container fluid>
+        <b-row class="justify-content-md-center text-center my-4">
+            <b-col md="12">
                 <h2><b-icon icon="key" aria-hidden="true"></b-icon> Admin Login</h2>
-            </b-row>
-            <b-row align-h="center">
-                <b-form @submit.prevent="login" class="w-25">
+            </b-col>
+        </b-row>
+        <b-row class="justify-content-md-center">
+            <b-col md="3">
+                <b-form @submit.prevent="login">
                     <b-form-group label="Email address:" label-for="email">
                         <b-form-input v-model="form.email" type="email" id="email" required placeholder="Enter email" />
                     </b-form-group>
@@ -13,21 +16,26 @@
                         <b-form-input v-model="form.password" type="password" id="password" required
                             placeholder="Enter password" />
                     </b-form-group>
-                    <b-button type="submit" v-if="isLoading" variant="primary" class="d-flex align-items-center" size="lg" disabled>
-                        <span class="mr-2">Loading...</span>
-                        <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
-                    </b-button>
-                    <b-button v-else type="submit" variant="primary" size="lg" :disabled="loginDisabled">Login</b-button>
+                    <div class="text-center mt-4">
+                        <b-button block type="submit" v-if="isLoading" variant="primary" class="d-flex align-items-center"
+                            size="lg" disabled>
+                            <span class="mr-2">Loading...</span>
+                            <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                        </b-button>
+                        <b-button block v-else type="submit" variant="primary" size="lg"
+                            :disabled="loginDisabled">Login</b-button>
+                    </div>
                 </b-form>
-            </b-row>
-        </b-container>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
 
 export default {
-    asyncData({$cookies}) {
-         $cookies.removeAll()
+    asyncData({ $cookies }) {
+        $cookies.removeAll()
     },
 
     head() {
@@ -48,7 +56,7 @@ export default {
 
     computed: {
         loginDisabled() {
-            return this.form.email === "" || this.form.password === "" 
+            return this.form.email === "" || this.form.password === ""
         }
     },
     methods: {
