@@ -48,5 +48,8 @@
     "nodemon": "^2.0.20",
     "supertest": "^6.2.4",
     "vue-jest": "^3.0.4"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
