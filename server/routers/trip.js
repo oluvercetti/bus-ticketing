@@ -65,7 +65,7 @@ router.get('/api/admin/trips/getAllTrips', auth, async (req, res) => {
     }
     try {
 
-        const trips = await Trip.find(match).sort(sort).limit(limit).skip(page);
+        const trips = await Trip.find(match);
 
         res.status(200).send({ status: "Success", data: trips })
     } catch (error) {
@@ -103,9 +103,9 @@ router.patch('/api/admin/trips/:id', auth, async (req, res) => {
 router.delete('/api/admin/trips/:id', auth, async (req, res) => {
     const _id = req.params.id
     try {
-        const location = await Location.findOneAndDelete({ _id })
-        if (!location) {
-            return res.status(404).send({ status: 'Error', })
+        const trip = await Trip.findOneAndDelete({ _id })
+        if (!trip) {
+            return res.status(404).send({ status: 'Error'})
         }
 
         res.send({ message: 'Deleted Successfully' })
