@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "npm install && nuxt build",
-    "start": "node server/express.js",
+    "start": "concurrently \"node src/index.js\" \"nuxt start\"",
     "generate": "nuxt generate",
     "test": "jest",
     "dev": "env-cmd -f ./config/dev.env nodemon --watch server --exec \"nuxt\"",
