@@ -25,7 +25,8 @@
                         </b-form-select>
                     </b-form-group>
                     <div v-if="isLoading">
-                        <b-button variant="primary" class="d-flex align-items-center" size="lg" disabled>
+                        <b-button variant="primary" class="d-flex align-items-center justify-content-center" size="lg"
+                            disabled>
                             <span class="mr-2">Loading...</span>
                             <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
                         </b-button>
@@ -36,7 +37,7 @@
                 </b-form>
             </b-col>
             <b-col md="6" sm="12" v-if="routeDetails">
-                <b-card bg-variant="dark">
+                <b-card bg-variant="dark" class="mt-4">
                     <b-card-title>Trip Details</b-card-title>
                     <b-card-text>{{ pickup }} to {{ destination }}</b-card-text>
                     <b-card-text>Distance: {{ routeDetails.distance | format_number }} miles</b-card-text>
@@ -71,7 +72,10 @@
                     <b-form-rating id="rating-inline" variant="warning" inline v-model="ticketInfo.review"></b-form-rating>
                 </b-form-group>
                 <b-form-group>
-                    <b-button type="submit" variant="primary" class="mr-3">Book Ticket</b-button>
+                    <b-button v-if="isLoading" type="submit" variant="primary" class="mr-3" disabled>
+                        <span class="mr-2">Booking Ticket...</span>
+                        <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner></b-button>
+                    <b-button v-else type="submit" variant="primary" class="mr-3">Book Ticket</b-button>
                     <b-button type="button" @click="showBookTicketModal = !showBookTicketModal">Cancel</b-button>
                 </b-form-group>
             </b-form>
@@ -97,13 +101,10 @@ export default {
             routeDetails: null,
             ticketInfo: {
                 custEmail: null,
-                totalAmount: null,
                 review: 0,
             },
             showBookTicketModal: false,
             isLoading: false,
-            maxRating: 5,
-            tempRating: 0,
         }
     },
 
@@ -178,7 +179,7 @@ export default {
                 seats: this.ticketCount,
                 stars: this.ticketInfo.review
             }
-
+            this.isLoading = true;
             this.$store.dispatch("createTicket", payload).then((response) => {
                 this.$bvToast.toast("Ticket created successfully", {
                     title: 'Success',
@@ -186,6 +187,7 @@ export default {
                     delay: 300
                 })
                 this.showBookTicketModal = false
+                this.isLoading = false;
                 this.resetValues();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data?.message, {
@@ -193,28 +195,17 @@ export default {
                     variant: 'danger',
                     delay: 300
                 })
+                this.isLoading = false;
             });
         },
 
         resetValues() {
             this.routeDetails = null
+            this.ticketInfo.custEmail = null
+            this.ticketInfo.review = 0
         },
-
-        hoverRating(rating) {
-            this.tempRating = rating;
-        },
-
-        setRating(rating) {
-            this.ticketInfo.review = rating;
-        },
-
-        resetTempRating() {
-            this.tempRating = this.ticketInfo.review;
-        }
     },
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

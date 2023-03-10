@@ -58,7 +58,11 @@
                         <b-form-select-option value="false">Pending</b-form-select-option>
                     </b-form-select>
                 </b-form-group>
-                <b-button type="submit" variant="primary" class="mr-3">Update Ticket</b-button>
+                <b-button v-if="isLoading" class="d-flex align-items-center" type="submit" variant="primary" disabled>
+                    <span class="mr-2">Saving...</span>
+                    <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                </b-button>
+                <b-button v-else type="submit" variant="primary" class="mr-3">Update Ticket</b-button>
                 <b-button type="button" @click="showUpdateTicketModal = !showUpdateTicketModal">Cancel</b-button>
             </b-form>
         </b-modal>
@@ -151,6 +155,7 @@ export default {
             const payload = {
                 status: this.selectedTicket.active,
             }
+            this.isLoading = true;
             return this.$store.dispatch("updateTicket", { id, payload }).then((response) => {
                 this.$bvToast.toast("Updated Successfully", {
                     title: 'Success',
@@ -158,6 +163,7 @@ export default {
                     delay: 300
                 })
                 this.showUpdateTicketModal = false
+                this.isLoading = false;
                 this.handelFetchTicketList();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data, {
@@ -165,6 +171,7 @@ export default {
                     variant: 'danger',
                     delay: 300
                 })
+                this.isLoading = false;
             });
         },
     }

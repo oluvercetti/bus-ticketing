@@ -30,7 +30,7 @@ router.post('/api/admin/locations', auth, async (req, res) => {
         } else {
             res.status(400).send({
                 status: "error",
-                message: error
+                message: error.message
             } || 'Error occurred')
         }
         
@@ -42,8 +42,11 @@ router.get('/api/admin/locations', async (req, res) => {
     try {
         const locations = await Location.find()
         res.status(200).send({status: "Success", data: locations})
-    } catch (err) {
-        res.status(500).send(err)   
+    } catch (error) {
+        res.status(400).send({
+            status: "error occurred",
+            message: error.message
+        } || 'Error occurred')   
     }
 })
 
@@ -66,8 +69,12 @@ router.patch('/api/admin/locations/:id', auth, async (req, res) => {
         await location.save()
 
         res.send(location)
-    } catch (err) {
-        res.status(400).send({ error: 'Error occurred'})
+    } catch (error) {
+        
+        res.status(400).send({
+            status: "error occurred",
+            message: error.message
+        } || 'Error occurred') 
     }
 })
 
@@ -81,8 +88,11 @@ router.delete('/api/admin/locations/:id', auth, async (req, res) => {
 
         res.send({message: 'Deleted Successfully'})
 
-    } catch (e) {
-        res.status(500).send()
+    } catch (error) {
+        res.status(400).send({
+            status: "error occurred",
+            message: error.message
+        } || 'Error occurred') 
     }
 })
 
