@@ -1,13 +1,12 @@
 
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
+const validator = require('validator')
 
 const ticketSchema = new mongoose.Schema( {
 
     cust_email: {
         type: String,
         required: true,
-        unique: true,
         trim: true,
         lowercase:true,
         validate(value) {
@@ -27,7 +26,7 @@ const ticketSchema = new mongoose.Schema( {
         required: true,
     },
 
-    price: {
+    total_amount: {
         type: Number,
         required: true,
     },
@@ -45,6 +44,16 @@ const ticketSchema = new mongoose.Schema( {
     ticket_id: {
         type: Number,
         unique: true,
+    },
+
+    stars: {
+        type: Number,
+        default: 0,
+    },
+
+    status: {
+        type: Boolean,
+        default: false,
     }
 
 }, {
@@ -65,7 +74,7 @@ const counterSchema = new mongoose.Schema({
 });
 
 // Define a method to increment the counter value and save the updated value
-counterSchema.statics.getNextValue = async function (name) {
+counterSchema.statics.getNextValue = async function (id) {
     const counter = await this.findOneAndUpdate({ id }, { $inc: { value: 1 } }, { new: true, upsert: true });
     return counter.value;
 };
