@@ -108,7 +108,7 @@ export const actions = ({
         })
     },
 
-    fetchSingleRoute(_, { payload }) {
+    fetchSingleRoute(_, payload ) {
         return this.$axios.post("/api/admin/trips/getTrip", payload).then((response) => {
             return response.data;
         })
@@ -121,6 +121,24 @@ export const actions = ({
     },
 
     //Ticket actions
+
+    createTicket(_, payload) {
+        return this.$axios.post("/api/admin/tickets/create", payload).then((response) => {
+            return response.data;
+        })
+    },
+
+    updateTicket(_, { id, payload }) {
+        return this.$axios.patch(`/api/admin/tickets/${id}`, payload).then((response) => {
+            return response.data;
+        })
+    },
+
+    fetchTicketList() {
+        return this.$axios.get("/api/admin/tickets/getAlltickets").then((response) => {
+            return response.data;
+        })
+    },
 
     nuxtServerInit({ commit, dispatch }, { req, redirect, route }) {
         const path = route.path;
