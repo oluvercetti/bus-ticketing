@@ -1,10 +1,11 @@
 import { env } from "./config/env";
 import { store } from './store'
-/** Get host and port from BASE_URL */
+/** Get host and port from BASE_URL 
 const [HOST, PORT] = process.env.BASE_URL.replace(
   new RegExp(/^https?:\/\//),
   ''
 ).split(':')
+*/
 
 export default {
   env,
@@ -63,8 +64,7 @@ export default {
 
   /** Define server host and port */
   server: {
-    host: HOST,
-    port: PORT,
+    host: "0.0.0.0",
   },
 
   /** Express server */
