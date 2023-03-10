@@ -1,22 +1,24 @@
 <template>
     <div class="mt-3">
-        <b-table :items="ticketList" :fields="fields" :busy="isLoading" ref="ticket" class="mt-4" striped hover outlined>
-            
+        <h3>{{ totalRows }} {{ totalRows > 1 ? "records" : "record" }}</h3>
+        <b-table :items="ticketList" :fields="fields" :busy="isLoading" ref="ticket" class="mt-4" striped hover outlined
+            :per-page="perPage" :current-page="currentPage">
+
             <template #cell(cust_email)="custemail">
-               <p><strong>{{ custemail.value }}</strong></p>
+                <p><strong>{{ custemail.value }}</strong></p>
             </template>
             <template #cell(distance)="distance">
                 <!-- `distance.value` is the value after formatted by the Formatter -->
-               <p>{{ distance.value | format_number }}</p>
+                <p>{{ distance.value | format_number }}</p>
             </template>
             <template #cell(total_amount)="price">
-               <p>{{ price.value | format_amount }}</p>
+                <p>{{ price.value | format_amount }}</p>
             </template>
             <template #cell(stars)="review">
                 <b-form-rating id="rating-inline" variant="warning" inline v-model="review.value" readonly></b-form-rating>
             </template>
             <template #cell(status)="active">
-               <p>{{ active.value ? "Paid" : "Pending"}}</p>
+                <p>{{ active.value ? "Paid" : "Pending" }}</p>
             </template>
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
@@ -30,23 +32,25 @@
                 </div>
             </template>
         </b-table>
+        <b-pagination v-if="totalRows > perPage" v-model="currentPage" :total-rows="totalRows" :per-page="perPage" first-text="First" prev-text="Prev"
+            next-text="Next" last-text="Last" size="lg" align="center"></b-pagination>
 
-        <b-modal v-model="showUpdateTicketModal" hide-footer title="Edit Route">
-            <b-form @submit.prevent="updateLocation(selectedTicket)">
+        <b-modal v-model="showUpdateTicketModal" hide-footer title="Update Ticket">
+            <b-form @submit.prevent="handleUpdateTicket(selectedTicket)">
                 <b-form-group label="Pickup" label-for="pickup">
                     <p>{{ selectedTicket.pickup }}</p>
                 </b-form-group>
                 <b-form-group label="Destination" label-for="destination">
-                        <p>{{ selectedTicket.destination }}</p>
+                    <p>{{ selectedTicket.destination }}</p>
                 </b-form-group>
                 <b-form-group label="Customer Email" label-for="email">
-                        <p>{{ selectedTicket.custEmail }}</p>
+                    <h3>{{ selectedTicket.custEmail }}</h3>
                 </b-form-group>
-                <b-form-group label="Customer Email" label-for="email">
-                        <p>{{ selectedTicket.seats }}</p>
+                <b-form-group label="Number of seats" label-for="email">
+                    <h3>{{ selectedTicket.seats }}</h3>
                 </b-form-group>
-                <b-form-group label="Customer Email" label-for="email">
-                        <p>{{ selectedTicket.total_amount | format_amount }}</p>
+                <b-form-group label="Total Amount" label-for="email">
+                    <h3>{{ selectedTicket.total_amount | format_amount }}</h3>
                 </b-form-group>
                 <b-form-group label="Status" label-for="status">
                     <b-form-select v-model="selectedTicket.active" id="status">
@@ -54,7 +58,7 @@
                         <b-form-select-option value="false">Pending</b-form-select-option>
                     </b-form-select>
                 </b-form-group>
-                <b-button type="submit" variant="primary" class="mr-3">Save Route</b-button>
+                <b-button type="submit" variant="primary" class="mr-3">Update Ticket</b-button>
                 <b-button type="button" @click="showUpdateTicketModal = !showUpdateTicketModal">Cancel</b-button>
             </b-form>
         </b-modal>
@@ -75,8 +79,8 @@ export default {
                 { key: 'seats', label: 'Seats', sortable: true },
                 { key: 'date', label: 'Date Booked', sortable: true },
                 { key: 'total_amount', label: 'Total Amount', sortable: true },
-                { key: 'stars', label: 'Review'},
-                { key: 'status', label: 'Status'},
+                { key: 'stars', label: 'Review' },
+                { key: 'status', label: 'Status' },
                 'Actions',
             ],
             newTicket: {
@@ -95,18 +99,28 @@ export default {
             addModalVisible: false,
             showUpdateTicketModal: false,
             isLoading: false,
+            perPage: 8,
+            currentPage: 1,
+            sortBy: null,
+            sortDesc: false
         }
     },
 
-    fetch () {
+    fetch() {
         this.handelFetchTicketList();
     },
 
     fetchOnServer: false,
 
+    computed: {
+        totalRows() {
+            return this.ticketList?.length;
+        }
+    },
+
     methods: {
-        
-        handelFetchTicketList(){
+
+        handelFetchTicketList() {
             this.isLoading = true;
             return this.$store.dispatch("fetchTicketList").then((response) => {
                 this.isLoading = false;
@@ -127,18 +141,34 @@ export default {
             this.selectedTicket.custEmail = data.cust_email;
             this.selectedTicket.seats = data.seats;
             this.selectedTicket.total_amount = data.total_amount;
-            this.selectedTicket.active = data.active;
-            this.selectedTicket.id = data._id;
+            this.selectedTicket.active = data.status;
+            this.selectedTicket.id = data.ticket_id;
             this.showUpdateTicketModal = true;
         },
 
-        handleConfirmTicket() {
-
+        handleUpdateTicket(data) {
+            const id = data.id;
+            const payload = {
+                status: this.selectedTicket.active,
+            }
+            return this.$store.dispatch("updateTicket", { id, payload }).then((response) => {
+                this.$bvToast.toast("Updated Successfully", {
+                    title: 'Success',
+                    variant: 'success',
+                    delay: 300
+                })
+                this.showUpdateTicketModal = false
+                this.handelFetchTicketList();
+            }).catch((error) => {
+                this.$bvToast.toast(error?.response?.data, {
+                    title: 'Error',
+                    variant: 'danger',
+                    delay: 300
+                })
+            });
         },
     }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
