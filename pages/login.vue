@@ -17,9 +17,9 @@
                             placeholder="Enter password" />
                     </b-form-group>
                     <div class="text-center mt-4">
-                        <b-button block type="submit" v-if="isLoading" variant="primary" class="d-flex align-items-center"
-                            size="lg" disabled>
-                            <span class="mr-2">Loading...</span>
+                        <b-button block type="submit" v-if="isLoading" variant="primary"
+                            class="d-flex align-items-center justify-content-center" size="lg" disabled>
+                            <span class="mr-2">Please wait...</span>
                             <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
                         </b-button>
                         <b-button block v-else type="submit" variant="primary" size="lg"
@@ -66,6 +66,7 @@ export default {
                 email: f.email,
                 password: f.password
             }
+            this.isLoading = true;
 
             return this.$store.dispatch("loginAdminUser", payload).then(() => {
                 this.$store.commit("setIsAuthenticated", true);
@@ -76,6 +77,8 @@ export default {
                     variant: 'danger',
                     delay: 300
                 })
+                this.isLoading = false;
+
             });
         }
     }

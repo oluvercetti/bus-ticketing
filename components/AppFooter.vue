@@ -17,5 +17,6 @@
     color: #FFF;
     font-size: 1.5rem;
     font-weight: 200;
+    padding: 3rem 0;
 }
 </style>

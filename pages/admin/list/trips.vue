@@ -61,7 +61,11 @@
                 <b-form-group label="Price" label-for="price">
                     <b-form-input id="price" type="number" min="0" v-model="newRoute.price" required></b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="primary" class="mr-3">Add Route</b-button>
+                <b-button v-if="isLoading" class="d-flex align-items-center" type="submit" variant="primary" disabled>
+                    <span class="mr-2">Creating Route...</span>
+                    <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                </b-button>
+                <b-button v-else type="submit" variant="primary" class="mr-3">Add Route</b-button>
                 <b-button type="button" @click="showAddRouteModal = !showAddRouteModal">Cancel</b-button>
             </b-form>
         </b-modal>
@@ -92,7 +96,11 @@
                         <b-form-select-option value="false">Inactive</b-form-select-option>
                     </b-form-select>
                 </b-form-group>
-                <b-button type="submit" variant="primary" class="mr-3">Save Route</b-button>
+                <b-button v-if="isLoading" class="d-flex align-items-center" type="submit" variant="primary" disabled>
+                    <span class="mr-2">Saving...</span>
+                    <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                </b-button>
+                <b-button v-else type="submit" variant="primary" class="mr-3">Save Route</b-button>
                 <b-button type="button" @click="showUpdateRouteModal = !showUpdateRouteModal">Cancel</b-button>
             </b-form>
         </b-modal>
@@ -185,6 +193,7 @@ export default {
                 time: this.newRoute.time,
                 price: this.newRoute.price,
             }
+            this.isLoading = true;
             return this.$store.dispatch("createRoute", payload).then(() => {
                 this.$bvToast.toast("Route added successfully", {
                     title: 'Success',
@@ -192,6 +201,8 @@ export default {
                     delay: 300
                 })
                 this.showAddRouteModal = false
+                this.isLoading = false;
+                this.resetTripValues();
                 this.handleFetchRouteList();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data?.message, {
@@ -199,6 +210,7 @@ export default {
                     variant: 'danger',
                     delay: 300
                 })
+                this.isLoading = false;
             });
         },
 
@@ -221,6 +233,7 @@ export default {
                 price: this.selectedRoute.price,
                 active: this.selectedRoute.active,
             }
+            this.isLoading = true;
             return this.$store.dispatch("updateRoute", { id, payload }).then((response) => {
                 this.$bvToast.toast("Route updated successfully", {
                     title: 'Success',
@@ -228,6 +241,7 @@ export default {
                     delay: 300
                 })
                 this.showUpdateRouteModal = false
+                this.isLoading = false;
                 this.handleFetchRouteList();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data, {
@@ -235,6 +249,7 @@ export default {
                     variant: 'danger',
                     delay: 300
                 })
+                this.isLoading = false;
             });
         },
 
@@ -281,8 +296,14 @@ export default {
             });
         },
 
-        resetLocationValues() {
-
+        resetTripValues() {
+            this.newRoute = {
+                pickup: null,
+                destination: null,
+                distance: null,
+                time: null,
+                price: null,
+            }
         },
     }
 }
