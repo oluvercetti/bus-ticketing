@@ -31,7 +31,7 @@ export default {
         },
 
         navLinkColor() {
-            return this.$route.path.startsWith("/admin") ? "light" : "dark"
+            return this.$route.path.startsWith("/admin") || this.$route.path.startsWith("/contact")? "light" : "dark"
         }
     },
 }
