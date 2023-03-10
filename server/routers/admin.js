@@ -4,7 +4,6 @@ const auth = require('../middleware/auth')
 const router = new express.Router()
 const multer = require('multer')
 const sharp = require('sharp');
-const { sendWelcomeMessage, sendCancellationMessage } = require('../emails/account')
 
 
 
@@ -14,7 +13,6 @@ router.post('/api/admin/create', async (req, res) => {
     const admin = new Admin(req.body)
     try {
         await admin.save()
-        //sendWelcomeMessage(admin.email, admin.name) //this was commented because email has not been configured yet
         const token = await admin.generateAuthToken()
         res.status(200).send({ admin })
     } catch (error) {
