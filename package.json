@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "npm install && nuxt build",
-    "start": "node server/express.js",
+    "start": "node server/express.js --exec \"nuxt start\"",
     "generate": "nuxt generate",
     "test": "jest",
     "dev": "env-cmd -f ./config/dev.env nodemon --watch server --exec \"nuxt\"",
@@ -49,8 +49,5 @@
     "nodemon": "^2.0.20",
     "supertest": "^6.2.4",
     "vue-jest": "^3.0.4"
-  },
-  "engines": {
-    "node": "14.x"
   }
 }
