@@ -3,6 +3,7 @@ const router = express.Router()
 const auth = require('../middleware/auth')
 const Ticket = require('../models/ticket')
 const Location = require('../models/location')
+const { sendTicketInfo } = require('../emails/nodemailer')
 
 //Tickets API
 
@@ -15,6 +16,7 @@ router.post("/api/admin/tickets/create", async (req, res) => {
         const validateLocation = await Location.findLocations(req.body.pickup, req.body.destination)
         if (validateLocation) {
             await ticket.save()
+            sendTicketInfo(ticket.cust_email, ticket.ticket_id, ticket.total_amount);
             res.status(200).send({ ticket, message: 'Ticket created successfully' })
         }
 
