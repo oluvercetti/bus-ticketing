@@ -1,7 +1,7 @@
 <template>
     <div class="mt-3">
         <b-button variant="primary" @click="showAddRouteModal = !showAddRouteModal">Add Route</b-button>
-        <b-table :items="routeList" :fields="fields" :busy="isLoading" ref="location" class="mt-4" striped hover outlined>
+        <b-table :items="routeList" :fields="fields" :busy="isLoading" ref="trips" class="mt-4" striped hover outlined>
             <template #cell(distance)="distance">
                 <!-- `distance.value` is the value after formatted by the Formatter -->
                <p>{{ distance.value | format_number }}</p>
@@ -12,7 +12,7 @@
             </template>
             <template #cell(price)="price">
                 <!-- `distance.value` is the value after formatted by the Formatter -->
-               <p>N {{ price.value | format_amount }}</p>
+               <p>{{ price.value | format_amount }}</p>
             </template>
             <template #cell(active)="active">
                 <!-- `distance.value` is the value after formatted by the Formatter -->

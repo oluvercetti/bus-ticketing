@@ -28,7 +28,7 @@ export function capitalizeFirstLetter(str = "") {
 
 export function formatAmount(amount = 0) {
     try {
-        return (parseFloat(amount).toFixed(2) * 1).toLocaleString("en", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+        return "&#8358;"+(parseFloat(amount).toFixed(2) * 1).toLocaleString("en", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
     } catch {
         return 0.00;
     }
