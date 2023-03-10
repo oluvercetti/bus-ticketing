@@ -1,7 +1,7 @@
 import { env } from "./config/env";
 import { store } from './store'
 /** Get host and port from BASE_URL */
-const [HOST, PORT] = env.BASE_URL.replace(
+const [HOST, PORT] = process.env.BASE_URL.replace(
   new RegExp(/^https?:\/\//),
   ''
 ).split(':')
