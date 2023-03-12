@@ -2,8 +2,8 @@
     <div>
         <ErrorBoundary>
             <div class="admin-container">
-            <AppHeader />
-            <Nuxt />
+                <AppHeader />
+                <Nuxt />
             </div>
         </ErrorBoundary>
     </div>
@@ -12,7 +12,7 @@
 <script>
 export default {
 
-}
+};
 </script>
 
 <style scoped>

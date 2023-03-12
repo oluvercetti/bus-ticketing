@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    errorCaptured(err, vm, info) {
+    errorCaptured() {
         this.$router.replace({ path: "/error" });
     },
 };

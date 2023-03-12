@@ -1,5 +1,5 @@
 
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const tripSchema = new mongoose.Schema({
 
@@ -36,24 +36,22 @@ const tripSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Admin'
-    }
+        ref: "Admin",
+    },
 }, {
-    timestamps: true
-})
+    timestamps: true,
+});
 
-tripSchema.statics.checkDuplicateRoute = async (pickup, destination) => {
-    const tripExists = await Trip.findOne({ pickup, destination })
+tripSchema.statics.checkDuplicateRoute = async(pickup, destination) => {
+    const tripExists = await Trip.findOne({ pickup, destination });
 
     if (tripExists) {
-        throw new Error('Route already exists')
+        throw new Error("Route already exists");
     }
 
-    return true
-}
+    return true;
+};
 
+const Trip = mongoose.model("Trip", tripSchema);
 
-
-const Trip = mongoose.model('Trip', tripSchema)
-
-module.exports = Trip
+module.exports = Trip;

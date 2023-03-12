@@ -1,26 +1,26 @@
 
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 const senderEmail = process.env.EMAIL_ADDRESS_OWNER;
 const senderPassword = process.env.EMAIL_ADDRESS_PW;
-    // Send email notification
+// Send email notification
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
         user: senderEmail,
-        pass: senderPassword
-    }
+        pass: senderPassword,
+    },
 });
 
-const sendTicketInfo = (email, ticket_id, amount) => {
+const sendTicketInfo = (email, ticketId, amount) => {
     transporter.sendMail({
-        to: email, //temporary
+        to: email, // temporary
         from: senderEmail,
-        subject: 'NMBTS Ticket Information',
-        text: `Dear Customer, your ticket id is ${ticket_id} and the amount due is ${amount}`
-    })
-}
+        subject: "NMBTS Ticket Information",
+        text: `Dear Customer, your ticket id is ${ticketId} and the amount due is ${amount}`,
+    });
+};
 
 module.exports = {
-    sendTicketInfo
-    
-}
+    sendTicketInfo,
+
+};

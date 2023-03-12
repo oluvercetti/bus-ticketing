@@ -1,21 +1,21 @@
 <template>
-  <div>
-    <ErrorBoundary>
-      <div class="default-container">
-        <AppHeader />
-        <div class="main-container">
-          <Nuxt />
-        </div>
-        <AppFooter />
-      </div>
-    </ErrorBoundary>
-  </div>
+    <div>
+        <ErrorBoundary>
+            <div class="default-container">
+                <AppHeader />
+                <div class="main-container">
+                    <Nuxt />
+                </div>
+                <AppFooter />
+            </div>
+        </ErrorBoundary>
+    </div>
 </template>
 
 <script>
 export default {
 
-}
+};
 </script>
 <style>
 body, html {
@@ -28,7 +28,7 @@ body, html {
   background-size: cover;
 
   height: 100%;
-  
+
     /* Apply padding on screens that are larger than 840px */
   @media screen and (min-width: 840px) {
     padding: 0 40px;
