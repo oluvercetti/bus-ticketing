@@ -2,41 +2,54 @@
     <div>
         <b-row class="align-items-center mx-3 my-3" align-h="between">
             <b-col md="6" sm="12">
-                <b-form @submit.prevent="handleFetchSingleRoute()" @input="resetValues" autocomplete=false>
+                <b-form autocomplete="false" @submit.prevent="handleFetchSingleRoute()" @input="resetValues">
                     <b-form-group label="Pickup:" label-for="pickup">
-                        <b-form-select v-model="pickup" :options="computedPickupLocations" id="pickup">
+                        <b-form-select id="pickup" v-model="pickup" :options="computedPickupLocations">
                             <template #first>
-                                <b-form-select-option value="" disabled>-- Please select a pickup location
-                                    --</b-form-select-option>
+                                <b-form-select-option value="" disabled>
+                                    -- Please select a pickup location
+                                    --
+                                </b-form-select-option>
                             </template>
                         </b-form-select>
                     </b-form-group>
                     <b-form-group label="Destination:" label-for="destination">
-                        <b-form-select v-model="destination" :options="computedDestinationLocations" id="destination"
-                            :disabled="!pickup">
+                        <b-form-select
+                            id="destination"
+                            v-model="destination"
+                            :options="computedDestinationLocations"
+                            :disabled="!pickup"
+                        >
                             <template #first>
-                                <b-form-select-option value="" disabled>-- Please select your destination
-                                    --</b-form-select-option>
+                                <b-form-select-option value="" disabled>
+                                    -- Please select your destination
+                                    --
+                                </b-form-select-option>
                             </template>
                         </b-form-select>
                     </b-form-group>
                     <b-form-group label="Seats:" label-for="seats">
-                        <b-form-select v-model="ticketCount" :options="seatCount">
-                        </b-form-select>
+                        <b-form-select v-model="ticketCount" :options="seatCount" />
                     </b-form-group>
                     <div v-if="isLoading">
-                        <b-button variant="primary" class="d-flex align-items-center justify-content-center" size="lg"
-                            disabled>
+                        <b-button
+                            variant="primary"
+                            class="d-flex align-items-center justify-content-center"
+                            size="lg"
+                            disabled
+                        >
                             <span class="mr-2">Loading...</span>
-                            <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                            <b-spinner style="width: 1.5rem; height: 1.5rem;" />
                         </b-button>
                     </div>
                     <div v-else>
-                        <b-button type="submit" variant="primary" size="lg" :disabled="searchDisabled">Search</b-button>
+                        <b-button type="submit" variant="primary" size="lg" :disabled="searchDisabled">
+                            Search
+                        </b-button>
                     </div>
                 </b-form>
             </b-col>
-            <b-col md="6" sm="12" v-if="routeDetails">
+            <b-col v-if="routeDetails" md="6" sm="12">
                 <b-card bg-variant="dark" class="mt-4">
                     <b-card-title>Trip Details</b-card-title>
                     <b-card-text>{{ pickup }} to {{ destination }}</b-card-text>
@@ -46,8 +59,10 @@
                     <b-card-text>Seats: {{ ticketCount }}</b-card-text>
                     <b-card-text>Total Amount: <h3><b>{{ totalAmount | format_amount }}</b></h3></b-card-text>
                     <div class="text-center mt-4">
-                        <b-button variant="primary" size="lg" @click="showBookTicketModal = !showBookTicketModal">Book
-                            Ticket</b-button>
+                        <b-button variant="primary" size="lg" @click="showBookTicketModal = !showBookTicketModal">
+                            Book
+                            Ticket
+                        </b-button>
                     </div>
                 </b-card>
             </b-col>
@@ -55,28 +70,43 @@
         <b-modal v-model="showBookTicketModal" hide-footer title="Add Route">
             <b-form @submit.prevent="handleCreateTicket()">
                 <b-form-group label="Pickup" label-for="pickup">
-                    <b-form-select v-model="pickup" :options="computedPickupLocations" id="pickup" required disabled />
+                    <b-form-select id="pickup" v-model="pickup" :options="computedPickupLocations" required disabled />
                 </b-form-group>
                 <b-form-group label="Destination" label-for="destination">
-                    <b-form-select v-model="destination" :options="computedDestinationLocations" id="destination" required
-                        disabled />
+                    <b-form-select
+                        id="destination"
+                        v-model="destination"
+                        :options="computedDestinationLocations"
+                        required
+                        disabled
+                    />
                 </b-form-group>
                 <b-form-group label="Customer Email" label-for="custemail">
-                    <b-form-input id="custemail" type="email" v-model="ticketInfo.custEmail" required
-                        placeholder="Kindly provide your email address"></b-form-input>
+                    <b-form-input
+                        id="custemail"
+                        v-model="ticketInfo.custEmail"
+                        type="email"
+                        required
+                        placeholder="Kindly provide your email address"
+                    />
                 </b-form-group>
                 <b-form-group>
                     <b-card-text>Total Amount: <h3><b>{{ totalAmount | format_amount }}</b></h3></b-card-text>
                 </b-form-group>
                 <b-form-group>
-                    <b-form-rating id="rating-inline" variant="warning" inline v-model="ticketInfo.review"></b-form-rating>
+                    <b-form-rating id="rating-inline" v-model="ticketInfo.review" variant="warning" inline />
                 </b-form-group>
                 <b-form-group>
                     <b-button v-if="isLoading" type="submit" variant="primary" class="mr-3" disabled>
                         <span class="mr-2">Booking Ticket...</span>
-                        <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner></b-button>
-                    <b-button v-else type="submit" variant="primary" class="mr-3">Book Ticket</b-button>
-                    <b-button type="button" @click="showBookTicketModal = !showBookTicketModal">Cancel</b-button>
+                        <b-spinner style="width: 1.5rem; height: 1.5rem;" />
+                    </b-button>
+                    <b-button v-else type="submit" variant="primary" class="mr-3">
+                        Book Ticket
+                    </b-button>
+                    <b-button type="button" @click="showBookTicketModal = !showBookTicketModal">
+                        Cancel
+                    </b-button>
                 </b-form-group>
             </b-form>
         </b-modal>
@@ -89,7 +119,7 @@ export default {
     props: {
         locations: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
     },
 
@@ -105,37 +135,37 @@ export default {
             },
             showBookTicketModal: false,
             isLoading: false,
-        }
+        };
     },
 
     computed: {
         searchDisabled() {
-            return this.pickup === "" || this.destination === ""
+            return this.pickup === "" || this.destination === "";
         },
 
         seatCount() {
-            return Array.from({ length: 13 }, (_, index) => index + 1)
+            return Array.from({ length: 13 }, (_, index) => index + 1);
         },
 
         computedPickupLocations() {
             return this.locations.map((data) => {
                 return {
-                    value: data.location, text: data.location
-                }
-            })
+                    value: data.location, text: data.location,
+                };
+            });
         },
 
         computedDestinationLocations() {
             return this.locations.map((data) => {
                 return {
-                    value: data.location, text: data.location, disabled: this.pickup === data.location
-                }
-            })
+                    value: data.location, text: data.location, disabled: this.pickup === data.location,
+                };
+            });
         },
 
         totalAmount() {
-            return this.routeDetails?.price * this.ticketCount
-        }
+            return this.routeDetails?.price * this.ticketCount;
+        },
 
     },
 
@@ -144,8 +174,8 @@ export default {
         handleFetchSingleRoute() {
             const payload = {
                 pickup: this.pickup,
-                destination: this.destination
-            }
+                destination: this.destination,
+            };
             this.isLoading = true;
             return this.$store.dispatch("fetchSingleRoute", payload).then((response) => {
                 this.routeDetails = response.data;
@@ -153,18 +183,17 @@ export default {
             }).catch((error) => {
                 if (error?.response?.status === 404) {
                     this.$bvToast.toast("There are no available trips on this route, Try again later.", {
-                        title: 'Error',
-                        variant: 'danger',
-                        delay: 300
-                    })
+                        title: "Error",
+                        variant: "danger",
+                        delay: 300,
+                    });
                 } else {
                     this.$bvToast.toast(error?.response?.data?.message, {
-                        title: 'Error',
-                        variant: 'danger',
-                        delay: 300
-                    })
+                        title: "Error",
+                        variant: "danger",
+                        delay: 300,
+                    });
                 }
-
 
                 this.isLoading = false;
             });
@@ -177,35 +206,35 @@ export default {
                 destination: this.destination,
                 total_amount: this.totalAmount,
                 seats: this.ticketCount,
-                stars: this.ticketInfo.review
-            }
+                stars: this.ticketInfo.review,
+            };
             this.isLoading = true;
             this.$store.dispatch("createTicket", payload).then((response) => {
                 this.$bvToast.toast("Ticket created successfully", {
-                    title: 'Success',
-                    variant: 'success',
-                    delay: 300
-                })
-                this.showBookTicketModal = false
+                    title: "Success",
+                    variant: "success",
+                    delay: 300,
+                });
+                this.showBookTicketModal = false;
                 this.isLoading = false;
                 this.resetValues();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data?.message, {
-                    title: 'Error',
-                    variant: 'danger',
-                    delay: 300
-                })
+                    title: "Error",
+                    variant: "danger",
+                    delay: 300,
+                });
                 this.isLoading = false;
             });
         },
 
         resetValues() {
-            this.routeDetails = null
-            this.ticketInfo.custEmail = null
-            this.ticketInfo.review = 0
+            this.routeDetails = null;
+            this.ticketInfo.custEmail = null;
+            this.ticketInfo.review = 0;
         },
     },
-}
+};
 </script>
 
 <style scoped></style>

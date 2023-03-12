@@ -28,7 +28,7 @@ export function capitalizeFirstLetter(str = "") {
 
 export function formatAmount(amount = 0) {
     try {
-        return "\u20A6"+(parseFloat(amount).toFixed(2) * 1).toLocaleString("en", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+        return "\u20A6" + (parseFloat(amount).toFixed(2) * 1).toLocaleString("en", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
     } catch {
         return 0.00;
     }
@@ -48,7 +48,6 @@ export function formatNumber(num) {
     num = num.toLocaleString("en"); // EN so we always get the commafied version.
     return num;
 }
-
 
 export function formInitials(item = "") {
     if (item !== null && item !== "") {

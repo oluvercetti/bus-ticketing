@@ -1,10 +1,10 @@
-const express = require('express') // use express to create server instance
-require('./db/mongoose')
-const allRouters = require('./routers')
+const express = require("express"); // use express to create server instance
+require("./db/mongoose");
+const allRouters = require("./routers");
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use(allRouters)
+app.use(express.json());
+app.use(allRouters);
 
-module.exports = { path: '/', handler: app }
+module.exports = { path: "/", handler: app };

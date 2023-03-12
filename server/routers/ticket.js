@@ -1,85 +1,82 @@
-const express = require('express')
-const router = express.Router()
-const auth = require('../middleware/auth')
-const Ticket = require('../models/ticket')
-const Location = require('../models/location')
-const { sendTicketInfo } = require('../emails/nodemailer')
+const express = require("express");
+const router = express.Router();
+const auth = require("../middleware/auth");
+const Ticket = require("../models/ticket");
+const Location = require("../models/location");
+const { sendTicketInfo } = require("../emails/nodemailer");
 
-//Tickets API
+// Tickets API
 
-router.post("/api/admin/tickets/create", async (req, res) => {
+router.post("/api/admin/tickets/create", async(req, res) => {
     const ticket = new Ticket({
-        ...req.body
+        ...req.body,
     });
 
     try {
-        const validateLocation = await Location.findLocations(req.body.pickup, req.body.destination)
+        const validateLocation = await Location.findLocations(req.body.pickup, req.body.destination);
         if (validateLocation) {
-            await ticket.save()
+            await ticket.save();
             sendTicketInfo(ticket.cust_email, ticket.ticket_id, ticket.total_amount);
-            res.status(200).send({ ticket, message: 'Ticket created successfully' })
+            res.status(200).send({ ticket, message: "Ticket created successfully" });
         }
-
     } catch (error) {
-
         res.status(400).send({
             status: "error occurred",
-            message: error.message
-        } || 'Error occurred')
-
-
+            message: error.message,
+        } || "Error occurred");
     }
-})
+});
 
-router.get('/api/admin/tickets/getAllTickets', auth, async (req, res) => {
-    const match = {}
-    const limit = parseInt(req.query.limit) || 20
-    const page = req.query.page > 1 ? (parseInt(req.query.page) - 1) * limit : 0 //this is my implementation
-    const sort = {}
+router.get("/api/admin/tickets/getAllTickets", auth, async(req, res) => {
+    const match = {};
+    // const limit = parseInt(req.query.limit) || 20;
+    // const page = req.query.page > 1 ? (parseInt(req.query.page) - 1) * limit : 0; // this is my implementation
+    const sort = {};
 
     if (req.query.status) {
-        match.status = req.query.status === 'true'
+        match.status = req.query.status === "true";
     }
 
     if (req.query.sortBy) {
-        const parts = req.query.sortBy.split(':')
-        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+        const parts = req.query.sortBy.split(":");
+        sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
     }
     try {
-
         const tickets = await Ticket.find(match);
 
-        res.status(200).send({ status: "Success", data: tickets })
+        res.status(200).send({ status: "Success", data: tickets });
     } catch (error) {
         return res.status(400).send({
             status: "error occurred",
-            message: error.message
-        } || 'Error occurred')
+            message: error.message,
+        } || "Error occurred");
     }
-})
+});
 
-router.patch('/api/admin/tickets/:id', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['status', 'cust_email']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+router.patch("/api/admin/tickets/:id", auth, async(req, res) => {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ["status", "cust_email"];
+    const isValidOperation = updates.every(update => allowedUpdates.includes(update));
     if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid operation', message: 'Update is not permitted' })
+        return res.status(400).send({ error: "Invalid operation", message: "Update is not permitted" });
     }
-    const id = req.params.id
+    const id = req.params.id;
     try {
-        const ticket = await Ticket.findOne({ ticket_id: id })
+        const ticket = await Ticket.findOne({ ticket_id: id });
         if (!ticket) {
-            return res.status(404).send({ error: 'ticket not found' })
+            return res.status(404).send({ error: "ticket not found" });
         }
 
-        updates.forEach((update) => ticket[update] = req.body[update])
+        updates.forEach((update) => {
+            ticket[update] = req.body[update];
+        });
 
-        await ticket.save()
+        await ticket.save();
 
-        res.send(ticket)
+        res.send(ticket);
     } catch (err) {
-        res.status(400).send({ error: 'Error occurred', message: err.message })
+        res.status(400).send({ error: "Error occurred", message: err.message });
     }
-})
+});
 
-module.exports = router
+module.exports = router;

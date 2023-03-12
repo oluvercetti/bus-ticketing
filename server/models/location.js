@@ -1,7 +1,7 @@
 
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const locationSchema = new mongoose.Schema( {
+const locationSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true,
@@ -14,38 +14,38 @@ const locationSchema = new mongoose.Schema( {
         trim: true,
         unique: true,
         validate: {
-            validator: function(v) {
+            validator(v) {
                 return v.length === 3;
             },
-            message: 'Shortcode must be exactly 3 characters long.'
-        }
+            message: "Shortcode must be exactly 3 characters long.",
+        },
     },
 
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Admin'
-    }
+        ref: "Admin",
+    },
 }, {
-    timestamps: true
-})
+    timestamps: true,
+});
 
-locationSchema.statics.findLocations = async (pickup, destination) => {
-    const pickupExists = await Location.findOne({ location: pickup })
+locationSchema.statics.findLocations = async(pickup, destination) => {
+    const pickupExists = await Location.findOne({ location: pickup });
 
     if (!pickupExists) {
-        throw new Error('Pickup location is not allowed')
+        throw new Error("Pickup location is not allowed");
     }
 
-    const destinationExists = await Location.findOne({ location: destination })
+    const destinationExists = await Location.findOne({ location: destination });
 
     if (!destinationExists) {
-        throw new Error('Destination location is not allowed')
+        throw new Error("Destination location is not allowed");
     }
 
     return true;
-}
+};
 
-const Location = mongoose.model('Location', locationSchema)
+const Location = mongoose.model("Location", locationSchema);
 
-module.exports = Location
+module.exports = Location;

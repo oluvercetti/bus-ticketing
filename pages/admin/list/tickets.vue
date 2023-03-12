@@ -1,9 +1,18 @@
 <template>
     <div class="mt-3">
         <h3>{{ totalRows }} {{ totalRows > 1 ? "records" : "record" }}</h3>
-        <b-table :items="ticketList" :fields="fields" :busy="isLoading" ref="ticket" class="mt-4" striped hover outlined
-            :per-page="perPage" :current-page="currentPage">
-
+        <b-table
+            ref="ticket"
+            :items="ticketList"
+            :fields="fields"
+            :busy="isLoading"
+            class="mt-4"
+            striped
+            hover
+            outlined
+            :per-page="perPage"
+            :current-page="currentPage"
+        >
             <template #cell(cust_email)="custemail">
                 <p><strong>{{ custemail.value }}</strong></p>
             </template>
@@ -15,25 +24,37 @@
                 <p>{{ price.value | format_amount }}</p>
             </template>
             <template #cell(stars)="review">
-                <b-form-rating id="rating-inline" variant="warning" inline v-model="review.value" readonly></b-form-rating>
+                <b-form-rating id="rating-inline" v-model="review.value" variant="warning" inline readonly />
             </template>
             <template #cell(status)="active">
                 <p>{{ active.value ? "Paid" : "Pending" }}</p>
             </template>
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
-                    <b-button @click="handleSelectedTicket(row.item)" variant="info">Update Status</b-button>
+                    <b-button variant="info" @click="handleSelectedTicket(row.item)">
+                        Update Status
+                    </b-button>
                 </div>
             </template>
             <template #table-busy>
                 <div class="text-center text-info my-2">
-                    <b-spinner class="align-middle"></b-spinner>
+                    <b-spinner class="align-middle" />
                     <strong>Loading...</strong>
                 </div>
             </template>
         </b-table>
-        <b-pagination v-if="totalRows > perPage" v-model="currentPage" :total-rows="totalRows" :per-page="perPage" first-text="First" prev-text="Prev"
-            next-text="Next" last-text="Last" size="lg" align="center"></b-pagination>
+        <b-pagination
+            v-if="totalRows > perPage"
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="perPage"
+            first-text="First"
+            prev-text="Prev"
+            next-text="Next"
+            last-text="Last"
+            size="lg"
+            align="center"
+        />
 
         <b-modal v-model="showUpdateTicketModal" hide-footer title="Update Ticket">
             <b-form @submit.prevent="handleUpdateTicket(selectedTicket)">
@@ -53,17 +74,25 @@
                     <h3>{{ selectedTicket.total_amount | format_amount }}</h3>
                 </b-form-group>
                 <b-form-group label="Status" label-for="status">
-                    <b-form-select v-model="selectedTicket.active" id="status">
-                        <b-form-select-option value="true">Confirm</b-form-select-option>
-                        <b-form-select-option value="false">Pending</b-form-select-option>
+                    <b-form-select id="status" v-model="selectedTicket.active">
+                        <b-form-select-option value="true">
+                            Confirm
+                        </b-form-select-option>
+                        <b-form-select-option value="false">
+                            Pending
+                        </b-form-select-option>
                     </b-form-select>
                 </b-form-group>
                 <b-button v-if="isLoading" class="d-flex align-items-center" type="submit" variant="primary" disabled>
                     <span class="mr-2">Saving...</span>
-                    <b-spinner style="width: 1.5rem; height: 1.5rem;"></b-spinner>
+                    <b-spinner style="width: 1.5rem; height: 1.5rem;" />
                 </b-button>
-                <b-button v-else type="submit" variant="primary" class="mr-3">Update Ticket</b-button>
-                <b-button type="button" @click="showUpdateTicketModal = !showUpdateTicketModal">Cancel</b-button>
+                <b-button v-else type="submit" variant="primary" class="mr-3">
+                    Update Ticket
+                </b-button>
+                <b-button type="button" @click="showUpdateTicketModal = !showUpdateTicketModal">
+                    Cancel
+                </b-button>
             </b-form>
         </b-modal>
     </div>
@@ -76,19 +105,19 @@ export default {
         return {
             ticketList: [],
             fields: [
-                { key: 'ticket_id', label: 'Ticket ID', sortable: true },
-                { key: 'cust_email', label: 'Customer Email', sortable: true },
-                { key: 'pickup', label: 'Pickup', sortable: true },
-                { key: 'destination', label: 'Destination', sortable: true },
-                { key: 'seats', label: 'Seats', sortable: true },
-                { key: 'date', label: 'Date Booked', sortable: true },
-                { key: 'total_amount', label: 'Total Amount', sortable: true },
-                { key: 'stars', label: 'Review' },
-                { key: 'status', label: 'Status' },
-                'Actions',
+                { key: "ticket_id", label: "Ticket ID", sortable: true },
+                { key: "cust_email", label: "Customer Email", sortable: true },
+                { key: "pickup", label: "Pickup", sortable: true },
+                { key: "destination", label: "Destination", sortable: true },
+                { key: "seats", label: "Seats", sortable: true },
+                { key: "date", label: "Date Booked", sortable: true },
+                { key: "total_amount", label: "Total Amount", sortable: true },
+                { key: "stars", label: "Review" },
+                { key: "status", label: "Status" },
+                "Actions",
             ],
             newTicket: {
-                pickup: '',
+                pickup: "",
                 destination: null,
                 distance: null,
                 time: null,
@@ -98,7 +127,7 @@ export default {
             selectedTicket: {
                 ticketId: null,
                 custEmail: null,
-                status: null
+                status: null,
             },
             addModalVisible: false,
             showUpdateTicketModal: false,
@@ -106,8 +135,8 @@ export default {
             perPage: 8,
             currentPage: 1,
             sortBy: null,
-            sortDesc: false
-        }
+            sortDesc: false,
+        };
     },
 
     fetch() {
@@ -119,7 +148,7 @@ export default {
     computed: {
         totalRows() {
             return this.ticketList?.length;
-        }
+        },
     },
 
     methods: {
@@ -132,10 +161,10 @@ export default {
             }).catch((error) => {
                 this.isLoading = false;
                 this.$bvToast.toast(error?.response?.data?.message, {
-                    title: 'Error',
-                    variant: 'danger',
-                    delay: 300
-                })
+                    title: "Error",
+                    variant: "danger",
+                    delay: 300,
+                });
             });
         },
 
@@ -154,28 +183,28 @@ export default {
             const id = data.id;
             const payload = {
                 status: this.selectedTicket.active,
-            }
+            };
             this.isLoading = true;
             return this.$store.dispatch("updateTicket", { id, payload }).then((response) => {
                 this.$bvToast.toast("Updated Successfully", {
-                    title: 'Success',
-                    variant: 'success',
-                    delay: 300
-                })
-                this.showUpdateTicketModal = false
+                    title: "Success",
+                    variant: "success",
+                    delay: 300,
+                });
+                this.showUpdateTicketModal = false;
                 this.isLoading = false;
                 this.handelFetchTicketList();
             }).catch((error) => {
                 this.$bvToast.toast(error?.response?.data, {
-                    title: 'Error',
-                    variant: 'danger',
-                    delay: 300
-                })
+                    title: "Error",
+                    variant: "danger",
+                    delay: 300,
+                });
                 this.isLoading = false;
             });
         },
-    }
-}
+    },
+};
 </script>
 
 <style lang="scss" scoped></style>
