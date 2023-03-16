@@ -41,6 +41,10 @@ export const mutations = ({
     setIsAuthenticated(state, value) {
         state.isAuthenticated = value;
     },
+
+    setAuthCookies(state, value) {
+        this.$cookies.set("nmbts", value, { secure: true, sameSite: "none" });
+    },
 });
 
 export const actions = ({
@@ -48,7 +52,7 @@ export const actions = ({
     loginAdminUser({ commit }, payload) {
         return this.$axios.post("/api/admin/login", payload).then(async(response) => {
             await commit("setAuthToken", response.data.token);
-            this.$cookies.set("nmbts", JSON.stringify(response.data.token));
+            commit("setAuthCookies", JSON.stringify(response.data.token));
         });
     },
 

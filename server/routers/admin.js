@@ -114,6 +114,11 @@ router.get("/api/admin/me/avatar", auth, (req, res) => {
     }
 });
 
+//GET /admin/
+router.get('/api/admin/me', auth, async (req, res) => {
+    res.status(200).send({status: "Success"})
+})
+
 router.patch("/api/admin/me", auth, async(req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ["name", "email", "password"];
