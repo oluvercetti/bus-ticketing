@@ -16,7 +16,7 @@ router.post("/api/admin/tickets/create", async(req, res) => {
         const validateLocation = await Location.findLocations(req.body.pickup, req.body.destination);
         if (validateLocation) {
             await ticket.save();
-            sendTicketInfo(ticket.cust_email, ticket.ticket_id, ticket.total_amount);
+            sendTicketInfo(ticket);
             res.status(200).send({ ticket, message: "Ticket created successfully" });
         }
     } catch (error) {
