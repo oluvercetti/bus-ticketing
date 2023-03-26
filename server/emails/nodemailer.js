@@ -35,13 +35,14 @@ const sendTicketInfo = (ticket) => {
         /* Apply additional styles as needed */
         table {
           border-collapse: collapse;
+          max-width: 500px;
           width: 100%;
           margin-bottom: 1em;
         }
 
         td {
           padding: 0.5em;
-          border: 1px solid #ccc;
+          border: 2px solid #ccc;
         }
 
         /* Add more styles here... */
