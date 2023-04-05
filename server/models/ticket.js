@@ -56,6 +56,11 @@ const ticketSchema = new mongoose.Schema({
         default: false,
     },
 
+    cust_name: {
+        type: String,
+        default: "Anonymous Customer"
+    }
+
 }, {
     timestamps: true,
 });

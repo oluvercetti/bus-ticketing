@@ -49,7 +49,7 @@ const sendTicketInfo = (ticket) => {
       </style>
     </head>
     <body>
-      <p>Dear Customer,</p>
+      <p>Dear ${ticket.cust_name},</p>
       <p>Thank you for choosing our bus ticketing app for your upcoming trip. We are excited to provide you with a hassle-free experience and look forward to serving you.</p>
       <p>Your booking details are as follows:</p>
       <table>
