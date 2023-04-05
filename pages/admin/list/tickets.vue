@@ -6,22 +6,29 @@
             :items="ticketList"
             :fields="fields"
             :busy="isLoading"
-            class="mt-4"
+            class="mt-4 small-font"
             striped
             hover
             outlined
             :per-page="perPage"
             :current-page="currentPage"
+            sort-icon-left
         >
+
+            <template #cell(route)="route">
+                <p>{{ route.item.pickup }} - {{ route.item.destination }}</p>
+            </template>
             <template #cell(cust_email)="custemail">
                 <p><strong>{{ custemail.value }}</strong></p>
             </template>
-            <template #cell(distance)="distance">
-                <!-- `distance.value` is the value after formatted by the Formatter -->
-                <p>{{ distance.value | format_number }}</p>
+            <template #cell(cust_name)="cust_name">
+                <p>{{ cust_name.value }}</p>
             </template>
             <template #cell(total_amount)="price">
                 <p>{{ price.value | format_amount }}</p>
+            </template>
+            <template #cell(date)="date">
+                <p>{{$moment(date.value).format("DD-MM-YYYY, HH:mm:ss")}}</p>
             </template>
             <template #cell(stars)="review">
                 <b-form-rating id="rating-inline" v-model="review.value" variant="warning" inline readonly />
@@ -32,7 +39,7 @@
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
                     <b-button variant="info" @click="handleSelectedTicket(row.item)">
-                        Update Status
+                        <b-icon icon="pencil"></b-icon>
                     </b-button>
                 </div>
             </template>
@@ -106,9 +113,9 @@ export default {
             ticketList: [],
             fields: [
                 { key: "ticket_id", label: "Ticket ID", sortable: true },
+                { key: "cust_name", label: "Customer Name", sortable: true },
                 { key: "cust_email", label: "Customer Email", sortable: true },
-                { key: "pickup", label: "Pickup", sortable: true },
-                { key: "destination", label: "Destination", sortable: true },
+                { key: "route", label: "Route", sortable: true },
                 { key: "seats", label: "Seats", sortable: true },
                 { key: "date", label: "Date Booked", sortable: true },
                 { key: "total_amount", label: "Total Amount", sortable: true },
@@ -207,4 +214,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+.small-font td, .small-font th {
+  font-size: 14px; /* set the font size to 12px */
+}
+</style>

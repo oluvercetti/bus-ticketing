@@ -81,6 +81,24 @@
                         disabled
                     />
                 </b-form-group>
+                <b-form-group label="First name" label-for="firstname">
+                    <b-form-input
+                        id="firstname"
+                        v-model="ticketInfo.firstName"
+                        required
+                        placeholder="Kindly enter your first name"
+                        pattern="[a-zA-ZÀ-ÿ- ]+"
+                    />
+                </b-form-group>
+                <b-form-group label="Last name" label-for="lastname">
+                    <b-form-input
+                        id="lastname"
+                        v-model="ticketInfo.lastName"
+                        required
+                        placeholder="Kindly enter your last name"
+                        pattern="[a-zA-ZÀ-ÿ- ]+"
+                    />
+                </b-form-group>
                 <b-form-group label="Customer Email" label-for="custemail">
                     <b-form-input
                         id="custemail"
@@ -132,6 +150,8 @@ export default {
             ticketInfo: {
                 custEmail: null,
                 review: 0,
+                firstName: null,
+                lastName: null,
             },
             showBookTicketModal: false,
             isLoading: false,
@@ -207,6 +227,7 @@ export default {
                 total_amount: this.totalAmount,
                 seats: this.ticketCount,
                 stars: this.ticketInfo.review,
+                cust_name: `${this.ticketInfo.firstName.trim()} ${this.ticketInfo.lastName.trim()}`
             };
             this.isLoading = true;
             this.$store.dispatch("createTicket", payload).then((response) => {

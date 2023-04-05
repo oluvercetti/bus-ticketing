@@ -8,10 +8,11 @@
             :items="routeList"
             :fields="fields"
             :busy="isLoading"
-            class="mt-4"
+            class="mt-4 small-font"
             striped
             hover
             outlined
+            sort-icon-left
         >
             <template #cell(distance)="distance">
                 <!-- `distance.value` is the value after formatted by the Formatter -->
@@ -32,7 +33,7 @@
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
                     <b-button variant="primary" @click="handleSelectedRoute(row.item)">
-                        Edit
+                        <b-icon icon="pencil"></b-icon>
                     </b-button>
                 </div>
             </template>
