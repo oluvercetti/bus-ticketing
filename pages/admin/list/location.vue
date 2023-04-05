@@ -8,18 +8,19 @@
             :items="computedLocationList"
             :fields="fields"
             :busy="isLoading"
-            class="mt-4"
+            class="mt-4 small-font"
             striped
             hover
             outlined
+            sort-icon-left
         >
             <template #cell(actions)="row">
                 <div class="d-flex justify-content-around">
                     <b-button variant="primary" @click="handleSelectedLocation(row.item)">
-                        Edit
+                        <b-icon icon="pencil"></b-icon>
                     </b-button>
                     <b-button variant="danger" @click="deleteLocation(row.item)">
-                        Delete
+                        <b-icon icon="trash"></b-icon>
                     </b-button>
                 </div>
             </template>
