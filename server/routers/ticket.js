@@ -39,10 +39,16 @@ router.get("/api/admin/tickets/getAllTickets", auth, async(req, res) => {
 
     if (req.query.sortBy) {
         const parts = req.query.sortBy.split(":");
-        sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+        if (parts[0] === "date") {
+            sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+        } else {
+            sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+        }
+    } else {
+        sort.date = -1; // add this line to sort by createdAt field by default
     }
     try {
-        const tickets = await Ticket.find(match);
+        const tickets = await Ticket.find(match).sort(sort);
 
         res.status(200).send({ status: "Success", data: tickets });
     } catch (error) {
