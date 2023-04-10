@@ -95,8 +95,8 @@ export default {
             ticketList: [],
             fields: [
                 { key: "ticket_id", label: "Ticket ID", sortable: true },
-                { key: "cust_name", label: "Customer Name", sortable: true },
-                { key: "cust_email", label: "Customer Email", sortable: true },
+                { key: "cust_name", label: "Name", sortable: true },
+                { key: "cust_email", label: "Email", sortable: true },
                 { key: "route", label: "Route", sortable: true },
                 { key: "seats", label: "Seats", sortable: true },
                 { key: "date", label: "Date Booked", sortable: true },
