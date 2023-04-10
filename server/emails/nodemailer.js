@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const senderEmail = process.env.EMAIL_ADDRESS_OWNER;
 const senderPassword = process.env.EMAIL_ADDRESS_PW;
 
-import { formatAmount } from "./../../plugins/filters"
+import { formatAmount } from "../../plugins/filters"
 // Send email notification
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const sendTicketInfo = (ticket) => {
     const total_amount = formatAmount(ticket.total_amount);
+    console.log("🚀 | file: nodemailer.js:18 | sendTicketInfo | total_amount:", total_amount);
     const emailTemplate = `
   <html>
   <head>
