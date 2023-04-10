@@ -3,8 +3,7 @@ const nodemailer = require("nodemailer");
 const senderEmail = process.env.EMAIL_ADDRESS_OWNER;
 const senderPassword = process.env.EMAIL_ADDRESS_PW;
 
-
-const { formatAmount } = require("../../plugins/filters");
+import { formatAmount } from "./../../plugins/filters"
 
 // Send email notification
 const transporter = nodemailer.createTransport({
