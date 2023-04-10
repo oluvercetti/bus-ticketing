@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 
 const sendTicketInfo = (ticket) => {
     const total_amount = formatAmount(ticket.total_amount);
-    console.log("🚀 | file: nodemailer.js:18 | sendTicketInfo | total_amount:", total_amount);
     const emailTemplate = `
   <html>
   <head>
