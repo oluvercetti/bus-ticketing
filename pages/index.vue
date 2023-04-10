@@ -4,7 +4,7 @@
             <b-col md="5" sm="12" xs="12">
                 <h2>The modern way to commute across cities</h2>
                 <br>
-                <p>NMBTS is a Nigerian technology powered company, providing seamless mobility services to commuters across Africa</p>
+                <p>NMBBS is a Nigerian technology powered company, providing seamless mobility services to commuters across Africa</p>
             </b-col>
             <b-col md="7" sm="12" xs="12">
                 <div class="search-container mt-4">
@@ -21,6 +21,12 @@ export default {
         return {
             locationList: this.$store.getters.getLocationList || [],
 
+        };
+    },
+
+    head() {
+        return {
+            title: "Home -  NMBBS",
         };
     },
 
