@@ -84,7 +84,7 @@ const sendTicketInfo = (ticket) => {
     transporter.sendMail({
         to: ticket.cust_email, // temporary
         from: senderEmail,
-        subject: "NMBTS Ticket Information",
+        subject: "NMBBS Ticket Information",
         html: emailTemplate,
     });
 };
