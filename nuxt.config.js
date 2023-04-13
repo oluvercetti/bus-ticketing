@@ -23,7 +23,11 @@ export default {
             { name: "format-detection", content: "telephone=no" },
         ],
         link: [
-            { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+            { rel: "icon", type: "image/x-icon", href: "/img/favicon.ico" },
+            { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+            { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+            { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+
         ],
     },
 
@@ -47,7 +51,7 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-    // https://go.nuxtjs.dev/bootstrap
+        // https://go.nuxtjs.dev/bootstrap
         "bootstrap-vue/nuxt",
         // https://go.nuxtjs.dev/axios
         "@nuxtjs/axios",
@@ -59,7 +63,7 @@ export default {
     },
 
     bootstrapVue: {
-    // Install the `IconsPlugin` plugin (in addition to `BootstrapVue` plugin)
+        // Install the `IconsPlugin` plugin (in addition to `BootstrapVue` plugin)
         icons: true,
     },
 

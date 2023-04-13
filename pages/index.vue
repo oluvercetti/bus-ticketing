@@ -24,6 +24,12 @@ export default {
         };
     },
 
+    head() {
+        return {
+            title: "Home -  NMBBS",
+        };
+    },
+
     created() {
         this.handleGetLocationList();
     },

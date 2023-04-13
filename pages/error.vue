@@ -17,6 +17,12 @@ export default {
         },
     },
 
+    head() {
+        return {
+            title: "Error -  NMBBS",
+        };
+    },
+
 };
 </script>
 
