@@ -9,6 +9,12 @@
 <script>
 export default {
     layout: "admin",
+
+    head() {
+        return {
+            title: "Contact Us -  NMBBS",
+        };
+    },
 };
 </script>
 
