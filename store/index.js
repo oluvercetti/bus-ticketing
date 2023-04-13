@@ -43,7 +43,7 @@ export const mutations = ({
     },
 
     setAuthCookies(state, value) {
-        this.$cookies.set("nmbts", value, { secure: true, sameSite: "none" });
+        this.$cookies.set("nmbbs", value, { secure: true, sameSite: "none" });
     },
 });
 
@@ -148,7 +148,7 @@ export const actions = ({
 
         // Path init functions
         const adminServerInit = async() => {
-            const authTokenCookie = this.$cookies.get("nmbts");
+            const authTokenCookie = this.$cookies.get("nmbbs");
             if (!authTokenCookie) {
                 return;
             }

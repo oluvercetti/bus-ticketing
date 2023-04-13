@@ -1,7 +1,7 @@
 <template>
     <b-navbar toggleable="lg" :type="navLinkColor">
         <b-navbar-brand to="/">
-            NMBTS
+            NMBBS
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse" />
         <b-collapse id="nav-collapse" is-nav>
